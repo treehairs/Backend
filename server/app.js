@@ -33,6 +33,12 @@ app.use(user)
 const products = require('./routes/products')
 app.use(products)
 
+const variants = require('./routes/variants')
+app.use(variants)
+
+const categories = require('./routes/categories')
+app.use(categories)
+
 const test = require('./routes/test')
 app.use(test)
 
