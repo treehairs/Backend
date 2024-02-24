@@ -38,7 +38,7 @@ const product_details = (req, res) => {
  * @param {*} res 
  */
 const update_product = (req, res) => {
-
+    console.log(req.body);
 }
 
 /**
@@ -64,14 +64,14 @@ const delete_product = (req, res) => {
 }
 
 
-const addProduct = (req, res) => {
+const add_product = (req, res) => {
 
 }
 
 module.exports = {
     product_details,
     product_list,
-    addProduct,
+    add_product,
     update_product,
     delete_product
 }
