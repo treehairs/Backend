@@ -1,12 +1,19 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
+const multer = require("multer");
 
 const conn = require('./models/db')
 
 // 增加请求体大小的限制为50MB
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+
+// 实例化multer，传递的参数对象，dest表示上传文件的存储路径
+const upload = multer({ dest: '../public/upload/' })
+app.use(upload.any()); //any表示任意类型的文件
+// 将静态资源托管，这样才能在浏览器上直接访问预览图片或则html页面
+app.use(express.static("../public"));
 
 // 配置CORS中间件
 app.use((req, res, next) => {
@@ -38,6 +45,9 @@ app.use(variants)
 
 const categories = require('./routes/categories')
 app.use(categories)
+
+const upload_router = require('./routes/upload')
+app.use(upload_router)
 
 const test = require('./routes/test')
 app.use(test)
