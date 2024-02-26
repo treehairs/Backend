@@ -9,7 +9,7 @@ const { get_data, delete_data } = require('../utils/dbUtils')
  * @param {*} res 
  */
 const variant_list = (req, res) => {
-    get_data('product_variants')
+    get_data('variant_list')
         .then(result => {
             res.send({
                 status: 200,
