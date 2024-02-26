@@ -38,7 +38,14 @@ const product_details = (req, res) => {
  * @param {*} res 
  */
 const update_product = (req, res) => {
-    console.log(req.body);
+    const pid = req.params.id
+    const { product_name, description, category_id, promo_image, product_status } = req.body
+    const info = { product_name, description, category_id, promo_image, product_status }
+    const sql = 'UPDATE products SET ? WHERE product_id=?'
+    conn.query(sql, [info, pid], (err, results) => {
+        if (err) throw err
+        res.send({ status: 200 })
+    })
 }
 
 /**
