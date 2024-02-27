@@ -46,11 +46,7 @@ const update_variant = (req, res) => {
     const variant_info = { variant_name, price, style, specs, stock_quantity, variant_image }
     try {
         update_data(variant_info, 'product_variants', { variant_id: vid })
-        // // 添加图片
-        // await add_data(image_info, 'product_images')
-        // // 添加信息
-        // await add_data(variant_info, 'product_variants')
-        // res.status(200).send()
+            .then(result => res.status(result).send())
     }
     catch (err) {
         console.log("修改头像失败", err);
@@ -64,17 +60,12 @@ const update_variant = (req, res) => {
  * @param {*} res 
  */
 const add_variant = (req, res) => {
-    const data = req.body;
-    const vid = req.params.vid
-    const image_info = { variant_id: +vid, image: data.image }
-    const { product_id, variant_name, price, style, specs, stock_quantity } = data
-    const variant_info = { product_id, variant_name, price, style, specs, stock_quantity }
+    const { product_id, variant_name, price, style, specs, stock_quantity, variant_image } = req.body
+    const variant_info = { product_id, variant_name, price, style, specs, stock_quantity, variant_image }
     try {
-        // 添加图片
-        add_data(image_info, 'product_images')
         // 添加信息
         add_data(variant_info, 'product_variants')
-        res.status(200).send()
+            .then(result => res.status(result).send())
     }
     catch (err) {
         console.log("修改头像失败", err);
