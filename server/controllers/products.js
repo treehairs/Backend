@@ -1,6 +1,8 @@
 const conn = require('../models/db')
 const mysql = require('mysql')
 
+const { add_data } = require('../utils/dbUtils')
+
 /**
  * 查询所有产品
  * @param {*} req 
@@ -72,7 +74,18 @@ const delete_product = (req, res) => {
 
 
 const add_product = (req, res) => {
-
+    console.log(req.body);
+    const { product_name, category_name, description, promo_image, product_status } = req.body
+    const product_info = { product_name, category_name, description, promo_image, product_status }
+    try {
+        // 添加信息
+        add_data(product_info, 'products')
+            .then(result => res.status(result).send())
+    }
+    catch (err) {
+        console.log("修改头像失败", err);
+        res.status(500).send()
+    }
 }
 
 module.exports = {
