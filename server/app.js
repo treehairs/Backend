@@ -49,6 +49,9 @@ app.use(categories)
 const upload_router = require('./routes/upload')
 app.use(upload_router)
 
+const orders = require('./routes/orders')
+app.use(orders)
+
 const test = require('./routes/test')
 app.use(test)
 
