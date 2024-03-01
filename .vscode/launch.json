@@ -1,0 +1,12 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node-terminal",
+      "name": "run in develop mode",
+      "request": "launch",
+      "command": "node ./server/app.js",
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}
