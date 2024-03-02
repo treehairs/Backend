@@ -8,8 +8,8 @@ const { add_data } = require('../utils/dbUtils')
  * @param {*} req 
  * @param {*} res 
  */
-const product_list = (req, res) => {
-    const sql = 'SELECT * FROM product_list'
+const order_list = (req, res) => {
+    const sql = 'SELECT * FROM oms_order'
     conn.query(sql, (err, result) => {
         if (err) throw err
         res.send({
@@ -90,7 +90,7 @@ const add_product = (req, res) => {
 
 module.exports = {
     product_details,
-    product_list,
+    order_list,
     add_product,
     update_product,
     delete_product
