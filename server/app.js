@@ -55,6 +55,9 @@ app.use(orders)
 const statistics = require('./routes/statistics')
 app.use(statistics)
 
+const admin = require('./routes/admin')
+app.use(admin)
+
 const test = require('./routes/test')
 app.use(test)
 
