@@ -52,6 +52,9 @@ app.use(upload_router)
 const orders = require('./routes/orders')
 app.use(orders)
 
+const statistics = require('./routes/statistics')
+app.use(statistics)
+
 const test = require('./routes/test')
 app.use(test)
 

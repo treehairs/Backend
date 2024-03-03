@@ -13,7 +13,8 @@ const get_data = (tableName, condition = '') => {
         const sql = 'SELECT * FROM ' + tableName + condition
         conn.query(sql, (err, result) => {
             if (err) reject(err)
-            resolve(result)
+            console.log(result[0]);
+            resolve(result[0])
         })
     })
 }
