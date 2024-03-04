@@ -4,12 +4,12 @@ const mysql = require('mysql')
 const { add_data } = require('../utils/dbUtils')
 
 /**
- * 查询所有产品
+ * 查询所有订单
  * @param {*} req 
  * @param {*} res 
  */
 const order_list = (req, res) => {
-    const sql = 'SELECT * FROM oms_order'
+    const sql = 'SELECT * FROM orders'
     conn.query(sql, (err, result) => {
         if (err) throw err
         res.send({

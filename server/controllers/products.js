@@ -40,9 +40,9 @@ const product_details = (req, res) => {
  * @param {*} res 
  */
 const update_product = (req, res) => {
-    const pid = req.params.id
-    const { product_name, description, category_id, promo_image, product_status } = req.body
-    const info = { product_name, description, category_id, promo_image, product_status }
+    const pid = +req.params.id
+    const { product_name, description, category_name, promo_image, product_status } = req.body
+    const info = { product_name, description, category_name, promo_image, product_status }
     const sql = 'UPDATE products SET ? WHERE product_id=?'
     conn.query(sql, [info, pid], (err, results) => {
         if (err) throw err

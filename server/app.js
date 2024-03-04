@@ -58,6 +58,9 @@ app.use(statistics)
 const admin = require('./routes/admin')
 app.use(admin)
 
+const logs = require('./routes/logs')
+app.use(logs)
+
 const test = require('./routes/test')
 app.use(test)
 

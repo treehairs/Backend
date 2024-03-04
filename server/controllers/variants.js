@@ -12,13 +12,14 @@ const variant_list = (req, res) => {
     let condition = '';
     if (req.query.pid)
         condition = ` WHERE product_id=${req.query.pid}`
-    get_data('product_variants', condition)
-        .then(result => {
-            res.send({
-                status: 200,
-                data: result
-            })
+    const sql = 'SELECT * FROM product_variants' + condition
+    conn.query(sql, (err, result) => {
+        if (err) throw err
+        res.send({
+            status: 200,
+            data: result
         })
+    })
 }
 
 /**
