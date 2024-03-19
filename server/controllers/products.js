@@ -12,6 +12,9 @@ const product_list = (req, res) => {
     const sql = 'SELECT * FROM product_list'
     conn.query(sql, (err, result) => {
         if (err) throw err
+        for (const item of result) {
+            item.min_price = item.min_price.toFixed(2)
+        }
         res.send({
             status: 200,
             data: result
@@ -26,10 +29,11 @@ const product_list = (req, res) => {
  */
 const product_details = (req, res) => {
     const id = req.params.id;
-    const sql = `SELECT * FROM products WHERE product_id=?`;
+    const sql = `SELECT * FROM product_list WHERE product_id=?`;
 
     conn.query(sql, id, (err, result) => {
         if (err) throw err
+        result[0].min_price = result[0].min_price.toFixed(2)
         res.send({ data: result })
     })
 }
