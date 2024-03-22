@@ -107,11 +107,99 @@ const delete_address = (req, res) => {
     })
 }
 
+const add_address = (req, res) => {
+    console.log("添加");
+    const { uid, name, telephone, city, street_address } = req.body
+    const i_sql = "INSERT INTO addresses(user_id,recipient_name,city,street_address,telephone) VALUES(?,?,?,?,?)"
+    conn.query(i_sql, [uid, name, city, street_address, telephone], (err, result) => {
+        if (err) throw err
+        res.status(200).send()
+    })
+}
+
+const update_address = (req, res) => {
+    const aid = +req.params.aid
+    const { uid, name, telephone, city, street_address } = req.body
+    const i_sql = "UPDATE addresses SET user_id=?,recipient_name=?,telephone=?,city=?,street_address=? WHERE address_id=?"
+    conn.query(i_sql, [uid, name, telephone, city, street_address, aid], (err, result) => {
+        if (err) throw err
+        res.status(200).send()
+    })
+}
+
+const get_orders = (req, res) => {
+    const uid = +req.params.uid
+    const s_t_sql = "SELECT * FROM orders WHERE user_id=?"
+    conn.query(s_t_sql, uid, (err, t_orders) => {
+        if (err) throw err
+        const s_v_sql = "SELECT * FROM v_order_item WHERE user_id=?"
+        conn.query(s_v_sql, uid, (err, v_order_item) => {
+            if (err) throw err
+            res.status(200).send({
+                orders: t_orders,
+                order_item: v_order_item
+            })
+        })
+    })
+}
+
+const add_orders = (req, res) => {
+    const { user_id, total_amount, tel, address, recipient_name, items } = req.body;
+
+    const i_order = "INSERT INTO orders(user_id, total_amount, order_status, tel, address, recipient_name) VALUES (?, ?, '待发货', ?, ?, ?)";
+    conn.query(i_order, [user_id, total_amount, tel, address, recipient_name], (err, result) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).send("Error inserting order");
+        }
+
+        const order_id = result.insertId; // Get the ID of the inserted order
+
+        // Insert each item related to the order
+        const i_order_item = "INSERT INTO order_item(order_id, variant_id, quantity, total_price) VALUES (?, ?, ?, ?)";
+        items.forEach(item => {
+            const { variant_id, quantity, price } = item;
+            conn.query(i_order_item, [order_id, variant_id, quantity, quantity * price], (err, result) => {
+                if (err) {
+                    console.log(err);
+                    return res.status(500).send("Error inserting order items");
+                }
+            });
+        });
+
+        return res.status(200).send("Order and items inserted successfully");
+    });
+}
+
+const done_order = (req, res) => {
+    const oid = +req.params.oid
+    const sql = "UPDATE orders SET order_status='已完成' WHERE order_id=?"
+    conn.query(sql, oid, (err, result) => {
+        if (err) throw err
+        res.status(200).send()
+    })
+}
+
+const delete_order = (req, res) => {
+    const oid = +req.params.oid
+    const sql = "DELETE FROM orders WHERE order_id=?"
+    conn.query(sql, oid, (err, result) => {
+        if (err) throw err
+        res.status(200).send()
+    })
+}
+
 module.exports = {
     wxLogin,
     shopping_cart,
     delete_goods,
     add_item_to_cart,
     get_address,
-    delete_address
+    delete_address,
+    add_address,
+    update_address,
+    get_orders,
+    add_orders,
+    done_order,
+    delete_order
 }
