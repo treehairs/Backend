@@ -150,24 +150,21 @@ const add_orders = (req, res) => {
     conn.query(i_order, [user_id, total_amount, tel, address, recipient_name], (err, result) => {
         if (err) {
             console.log(err);
-            return res.status(500).send("Error inserting order");
+            return res.status(500).send("插入顺序错误");
         }
-
-        const order_id = result.insertId; // Get the ID of the inserted order
-
-        // Insert each item related to the order
+        const order_id = result.insertId; // 获取插入订单的ID
+        // 插入与订单相关的每一项
         const i_order_item = "INSERT INTO order_item(order_id, variant_id, quantity, total_price) VALUES (?, ?, ?, ?)";
         items.forEach(item => {
             const { variant_id, quantity, price } = item;
             conn.query(i_order_item, [order_id, variant_id, quantity, quantity * price], (err, result) => {
                 if (err) {
                     console.log(err);
-                    return res.status(500).send("Error inserting order items");
+                    return res.status(500).send("插入订单项时出错");
                 }
             });
         });
-
-        return res.status(200).send("Order and items inserted successfully");
+        return res.status(200).send("订单和项目已成功插入");
     });
 }
 
@@ -176,7 +173,7 @@ const done_order = (req, res) => {
     const sql = "UPDATE orders SET order_status='已完成' WHERE order_id=?"
     conn.query(sql, oid, (err, result) => {
         if (err) throw err
-        res.status(200).send()
+        res.status(200).send({ status: 200 })
     })
 }
 

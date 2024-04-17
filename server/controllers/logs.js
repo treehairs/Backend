@@ -19,7 +19,23 @@ const log_list = (req, res) => {
     })
 }
 
+const add_log = (req, res) => {
+    const { admin_id, module, action_type, detail, request_method } = req.body
+    const info = { admin_id, module, action_type, detail, request_method }
+
+    try {
+        // 添加信息
+        add_data(product_info, 'logs')
+            .then(result => res.status(result).send())
+    }
+    catch (err) {
+        console.log("添加日志失败", err);
+        res.status(500).send()
+    }
+}
+
 
 module.exports = {
-    log_list
+    log_list,
+    add_log
 }

@@ -2,8 +2,11 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
 const multer = require("multer");
-
+const { handleConnection } = require('./controllers/socket')
+// const httpServer = require("http").createServer();
 const conn = require('./models/db')
+
+handleConnection()
 
 // 增加请求体大小的限制为50MB
 app.use(bodyParser.json({ limit: '50mb' }));
@@ -27,6 +30,9 @@ app.use((req, res, next) => {
         next();
     }
 });
+
+// const logger = require('./middleware/logger');
+// app.use(logger);
 
 // 引入请求解析体
 app.use(express.urlencoded({ extended: true }))
@@ -63,6 +69,7 @@ app.use(logs)
 
 const test = require('./routes/test')
 app.use(test)
+
 
 app.listen('3000', () => {
     console.log("启动服务器成功！http://localhost:3000/");

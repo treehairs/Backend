@@ -13,12 +13,10 @@ const login = (req, res) => {
     const sql = 'SELECT * FROM admins WHERE username=? AND password=?'
     conn.query(sql, [username, password], (err, result) => {
         if (err) throw err
-        if (result.length > 0) {
-            res.status(200).send()
-        }
-        else {
-            res.status(201).send()
-        }
+        let statusCode = result.length > 0 ? 200 : 201
+        res.status(statusCode).send({
+            data: result
+        })
     })
 }
 

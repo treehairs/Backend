@@ -31,7 +31,7 @@ const delete_variant = (req, res) => {
     const arr = req.body.id;
     delete_data(arr, 'product_variants', 'variant_id')
         .then(result => {
-            res.send(result)
+            res.status(200).send(result)
         })
 }
 
