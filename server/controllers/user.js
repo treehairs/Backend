@@ -3,22 +3,52 @@ const conn = require('../models/db')
 const wxLogin = (req, res) => {
     const { username, password } = req.body
 
-    const sql = 'select * from users where username=? and password=?'
-    conn.query(sql, [username, password], (err, results) => {
+    const sql = 'select * from users where username=?'
+    conn.query(sql, username, (err, results) => {
         if (err) throw err
         else {
             if (results.length !== 0) {
-                res.send({
-                    status: 200,
-                    userInfo: results
-                })
+                if (results[0].password === password) {
+                    res.send({
+                        status: 200,
+                        userInfo: results
+                    })
+                }
+                else {
+                    res.send({
+                        status: 201,
+                        msg: "账号或密码错误"
+                    })
+                }
             }
             else {
-                res.send({
-                    status: 201
+                const i_sql = "INSERT INTO users(username,nickname,password) VALUES(?,?,?)"
+                conn.query(i_sql, [username, username, password], (err, results2) => {
+                    if (err) throw err
+                    console.log(results2);
+                    res.send({
+                        status: 200,
+                        userInfo: [{
+                            id: results2.insertId,
+                            username,
+                            nickname: username,
+                            password,
+                            avatar: null
+                        }]
+                    })
                 })
             }
         }
+    })
+}
+
+const update_user = (req, res) => {
+    const { uid } = req.params
+    const { nickname, password } = req.body
+    const sql = "UPDATE users SET nickname=?,password=? WHERE id=?"
+    conn.query(sql, [nickname, password, uid], (err, result) => {
+        if (err) throw err
+        res.status(200).send("修改成功")
     })
 }
 
@@ -55,13 +85,13 @@ const delete_goods = (req, res) => {
 
 const add_item_to_cart = (req, res) => {
     const { user_id, product_id, variant_id, quantity } = req.body
-    const q_sql = "SELECT * FROM shopping_cart WHERE variant_id=?"
-    conn.query(q_sql, +variant_id, (err, result) => {
+    const q_sql = "SELECT * FROM shopping_cart WHERE variant_id=? AND user_id=?"
+    conn.query(q_sql, [+variant_id, +user_id], (err, result) => {
         if (err) throw err
         if (result.length) {
             // 购物车有商品，修改商品数量
-            const u_sql = "UPDATE shopping_cart SET quantity=? WHERE variant_id=?"
-            conn.query(u_sql, [result[0].quantity + +quantity, variant_id], (err, result) => {
+            const u_sql = "UPDATE shopping_cart SET quantity=? WHERE variant_id=? AND user_id=?"
+            conn.query(u_sql, [result[0].quantity + +quantity, variant_id, +user_id], (err, result) => {
                 if (err) throw err
                 res.status(200).send()
             })
@@ -198,5 +228,6 @@ module.exports = {
     get_orders,
     add_orders,
     done_order,
-    delete_order
+    delete_order,
+    update_user
 }
