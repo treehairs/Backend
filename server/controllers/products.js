@@ -83,7 +83,7 @@ const add_product = (req, res) => {
     const product_info = { product_name, category_name, description, promo_image, product_status }
     try {
         // 添加信息
-        add_data(product_info, 'products')
+        add_data([product_info], 'products')
             .then(result => res.status(result).send())
     }
     catch (err) {

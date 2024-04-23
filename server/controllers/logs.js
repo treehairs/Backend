@@ -25,7 +25,7 @@ const add_log = (req, res) => {
 
     try {
         // 添加信息
-        add_data(info, 'logs')
+        add_data([info], 'logs')
             .then(result => res.status(result).send())
     }
     catch (err) {

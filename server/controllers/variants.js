@@ -65,7 +65,7 @@ const add_variant = (req, res) => {
     const variant_info = { product_id, variant_name, price, style, specs, stock_quantity, variant_image }
     try {
         // 添加信息
-        add_data(variant_info, 'product_variants')
+        add_data([variant_info], 'product_variants')
             .then(result => res.status(result).send())
     }
     catch (err) {

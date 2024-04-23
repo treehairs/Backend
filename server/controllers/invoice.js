@@ -79,7 +79,7 @@ const add_invoice = (req, res) => {
     const invoice_info = { invoice_name, category_name, description, promo_image, invoice_status }
     try {
         // 添加信息
-        add_data(invoice_info, 'invoices')
+        add_data([invoice_info], 'invoices')
             .then(result => res.status(result).send())
     }
     catch (err) {
