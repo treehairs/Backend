@@ -53,20 +53,21 @@ const delete_data = (dataArr, tableName, field) => {
 const add_data = (dataList, tableName) => {
     return new Promise((resolve, reject) => {
         if (!Array.isArray(dataList) || dataList.length === 0) {
-            reject(new Error('数据集不能为空'));
+            // reject(new Error('数据集不能为空'));
+            return
         } else {
             const keys = Object.keys(dataList[0]); // 使用第一个数据对象的键作为列名
             const values = dataList.map(data => '(' + add_quotes(Object.values(data)).join(', ') + ')'); // 构建值部分数组
             const sql = `INSERT INTO ${tableName} (${keys.join(', ')}) VALUES ${values.join(', ')}`; // 构建 SQL 语句
 
-            console.log(sql);
-            // conn.query(sql, (err, result) => {
-            //     if (err) {
-            //         reject(err);
-            //     } else {
-            //         resolve(200);
-            //     }
-            // });
+            // console.log(sql);
+            conn.query(sql, (err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(200);
+                }
+            });
         }
     });
 };

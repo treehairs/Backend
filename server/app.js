@@ -5,8 +5,10 @@ const multer = require("multer");
 const { handleConnection } = require('./controllers/socket')
 // const httpServer = require("http").createServer();
 const conn = require('./models/db')
+const { generateSecretKey } = require('./utils/token')
 
 handleConnection()
+generateSecretKey()
 
 // 增加请求体大小的限制为50MB
 app.use(bodyParser.json({ limit: '50mb' }));

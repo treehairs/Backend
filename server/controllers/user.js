@@ -1,8 +1,11 @@
 const conn = require('../models/db')
+const jwt = require('jsonwebtoken');
+const fs = require('fs')
+const path = require('path')
+const { read_file } = require('../utils/utils')
 
 const wxLogin = (req, res) => {
     const { username, password } = req.body
-
     const sql = 'select * from users where username=?'
     conn.query(sql, username, (err, results) => {
         if (err) throw err
@@ -25,7 +28,7 @@ const wxLogin = (req, res) => {
                 const i_sql = "INSERT INTO users(username,nickname,password) VALUES(?,?,?)"
                 conn.query(i_sql, [username, username, password], (err, results2) => {
                     if (err) throw err
-                    console.log(results2);
+                    // console.log(results2);
                     res.send({
                         status: 200,
                         userInfo: [{
@@ -39,6 +42,44 @@ const wxLogin = (req, res) => {
                 })
             }
         }
+    })
+}
+
+const user_login = (req, res) => {
+    const { username, password } = req.body
+
+    const sql = 'SELECT * FROM users WHERE username=? AND password=?'
+
+    conn.query(sql, [username, password], (err, results) => {
+        if (err) throw err
+
+        if (results.length === 0) {
+            // 账号或密码错误
+            res.status(401).json({ message: '账号或密码错误' })
+        } else {
+            // 账号密码正确
+            const { nickname, avatar } = results[0]
+            const userInfo = { username, nickname, avatar }
+
+            // 读取private.key文件
+            read_file('../../private.key')
+                .then(data => {
+                    // 生成token
+                    jwt.sign(
+                        userInfo,
+                        data,
+                        { expiresIn: '1h' },
+                        (err, token) => {
+                            if (err) throw err
+                            res.json({ userInfo, message: '账号密码正确', token })
+                        }
+                    )
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+        }
+
     })
 }
 
@@ -229,5 +270,6 @@ module.exports = {
     add_orders,
     done_order,
     delete_order,
-    update_user
+    update_user,
+    user_login
 }
