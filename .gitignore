@@ -10,3 +10,6 @@ package-lock.json
 # production
 static
 data
+
+# private
+private.key
